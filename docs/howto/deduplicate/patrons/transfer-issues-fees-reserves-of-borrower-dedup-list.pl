@@ -23,7 +23,11 @@ use C4::Context;
 binmode(STDOUT, ":utf8");
 
 while (my $line = <>) {
-    my @to_update = qw(issues accountlines reserves);
+    my @table_and_key = (
+            [ qw( issues        issue_id        ) ],
+            [ qw( accountlines  accountlines_id ) ],
+            [ qw( reserves      reserve_id      ) ] );
+    my @to_update = map { $_->[0] } @table_and_key;
 
     # Accept a line with two borrowernumbers like:
     # FROM [,] TO [[,] COMMENTS]
@@ -33,6 +37,7 @@ while (my $line = <>) {
                      to   => { number => $2 } );
     print "\nProcessing line: $line";
 
+    # Get borrowers' information and counts.
     my $dbh = C4::Context->new_dbh;   # Not so efficient, but...
     for my $whom ('from', 'to') {
         my $res = $dbh->selectrow_hashref(
@@ -68,6 +73,7 @@ while (my $line = <>) {
     }
     $dbh->disconnect;   #... at least this shouldn't time out...
 
+    # Show what we have and confirm.
     print "Confirm transfer (@to_update)\n";
     for my $whom ('from', 'to') {
         my $iref = $borrower{$whom}{'info'};
@@ -88,21 +94,36 @@ while (my $line = <>) {
         next;
     }
 
+    # Print what is to be transferred, and finally
+    # update database (if not commented out below).
     $dbh = C4::Context->new_dbh;      # ... if the user is slow.
-    print "Updating...";
-    for my $what (@to_update) {
+    for my $t_k (@table_and_key) {
+        my @row_id = map { @$_ } $dbh->selectall_array(
+                " select $t_k->[1]
+                  from $t_k->[0]
+                  where borrowernumber = ?
+                  order by $t_k->[1]; ",
+                undef,
+                $borrower{'from'}{'number'}
+            );
+
+        print "Updating from $borrower{'from'}{'number'}",
+            " $t_k->[0]: @row_id.\n";
+
 my $commented = <<'COMMENTEND';
         my $rows = $dbh->do(
-                " update $what
+                " update $t_k->[0]
                   set borrowernumber = ?
                   where borrowernumber = ?; ",
                 undef,
                 $borrower{'to'}{'number'},
                 $borrower{'from'}{'number'}
             ) or die "DB ERROR: ${$dbh->errstr}\n";
-        print " $rows $what..." if $rows;
+        # Note that if 0, then $rows eq '0E0', so it will print.
+        print "Updated $rows $t_k[0] rows",
+            " from $borrower{'from'}{'number'}",
+            " to $borrower{'to'}{'number'}.\n" if $rows;
 COMMENTEND
     }
-    print " done.\n";
     $dbh->disconnect;
 }
