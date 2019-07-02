@@ -107,8 +107,8 @@ while (my $line = <>) {
                 $borrower{'from'}{'number'}
             );
 
-        print "Updating from $borrower{'from'}{'number'}",
-            " $t_k->[0]: @row_id.\n";
+        print "Updating $t_k->[0] from $borrower{'from'}{'number'}:",
+            " @row_id.\n";
 
 my $commented = <<'COMMENTEND';
         my $rows = $dbh->do(
@@ -120,7 +120,7 @@ my $commented = <<'COMMENTEND';
                 $borrower{'from'}{'number'}
             ) or die "DB ERROR: ${$dbh->errstr}\n";
         # Note that if 0, then $rows eq '0E0', so it will print.
-        print "Updated $rows $t_k[0] rows",
+        print "Updated $rows $t_k->[0] rows",
             " from $borrower{'from'}{'number'}",
             " to $borrower{'to'}{'number'}.\n" if $rows;
 COMMENTEND
