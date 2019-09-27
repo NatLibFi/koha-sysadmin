@@ -1,0 +1,54 @@
+EPLKFI<<borrowers.zipcode>>   100                       <LASKUTUSOSASTO>
+10Kansalliskirjasto
+EPL8DEFF
+ 0PL 15 (Unioninkatu 36)
+ 000014 HELSINGIN YLIOPISTO
+20<<borrowers.surname>> <<borrowers.firstname>>
+ 0<<borrowers.address>>
+ 0<<borrowers.zipcode>> <<borrowers.city>>
+30<<today>>
+Palautuskehotus Kansalliskirjastosta /
+Uppmaning att återlämna försenade lån från Nationalbibliteket /
+Overdue Notice from The National Library of Finland
+
+Hyvä / Bästa / Dear <<borrowers.firstname>> <<borrowers.surname>>
+
+Aikaisempaan palautuskehotukseen viitaten pyydämme sinua heti
+palauttamaan alla mainitun aineiston. Olet lainakiellossa, kunnes
+aineisto on palautettu. Lainakielto jatkuu myös, jos maksamattomia
+maksuja on yhteensä 15 euroa tai enemmän. Asiakas on velvollinen
+korvaamaan palauttamattoman aineiston. Jos aineistoa ei palauteta tai
+korvata, siirrämme asian käsittelyn perintätoimistolle. Asiakkaan
+on maksettava kirjan korvausmaksu, kertyneet maksut kirjastoon sekä
+perintäkulut perintätoimistoon. Mikäli lainat on jo palautettu tai
+uusittu kirjaston asiakaspalvelussa tämä ilmoitus on tarpeeton. Jos
+asiassa on epäselvyyksiä pyydämme sinua ottamaan yhteyttä
+Kansalliskirjastoon, puh. 02941 44633 tai kk-perinta@helsinki.fi.
+
+Med hänvisning till den föregående uppmaningen ber vi dig omedelbart
+returnera följande lån som har förfallit. Ditt bibliotekskort är spärrat
+tills lånen har returnerats och de uppkomna avgifterna betalats. Kunden
+är skyldig att ersätta materialet till dess fulla värde. Om det lånade
+materialet inte återlämnas, överlämnas ärendet till en inkassobyrå.
+Kunden ska betala ersättningen för förlorat material, de uppkomna
+förseningsavgifterna till biblioteket och inkassokostnaderna till
+inkassobyrån. Om lånen redan har returnerats eller förnyats kan den här
+uppmaningen ignoreras. Om något är oklart, kontakta Nationalbiblioteket,
+tel. 02941 44633 eller kk-perinta@helsinki.fi.
+
+In reference to the previous overdue notice we ask you to immediately
+return the overdue items listed below. You will be blocked until you
+have returned the books and paid the fines incurred. The customer must
+provide compensation in full for all lost materials. If the material
+has not been returned or compensation provided the matter continues
+to be administrated by a collection agency. The customer must pay
+the compensation for material, fines incurred to the library and the
+collection fees to the collection agency. If you have already returned
+or renewed the loans, you may disregard this notice. If you have any
+questions, please contact telephone 02941 44633 or kk-perinta@helsinki.fi.
+
+<item><<biblio.author>>: <<biblio.title>>, <<items.itemcallnumber>>
+Viivakoodi/streckkod/barcode: <<items.barcode>>
+Lainauspäivä/låndag/checkout date: <<issues.issuedate>>
+Eräpäivä/förfallodag/due date: <<issues.date_due>>
+</item>

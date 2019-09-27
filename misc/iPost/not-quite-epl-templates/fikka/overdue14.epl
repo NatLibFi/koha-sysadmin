@@ -1,0 +1,47 @@
+EPLKFI<<borrowers.zipcode>>   100                       <LASKUTUSOSASTO>
+10Kansalliskirjasto
+EPL8DEFF
+ 0PL 15 (Unioninkatu 36)
+ 000014 HELSINGIN YLIOPISTO
+20<<borrowers.surname>> <<borrowers.firstname>>
+ 0<<borrowers.address>>
+ 0<<borrowers.zipcode>> <<borrowers.city>>
+30<<today>>
+Myöhästymisilmoitus Kansalliskirjastosta /
+Uppmaning att återlämna försenade lån från Nationalbibliteket /
+Overdue Notice from The National Library of Finland
+
+Hyvä / Bästa / Dear <<borrowers.firstname>> <<borrowers.surname>>
+
+Alla mainitun aineiston laina-aika on päättynyt. Pyydämme sinua
+palauttamaan lainasi, tai uusimaan ne Kansalliskirjaston hakupalvelussa
+osoitteessa https://kansalliskirjasto.finna.fi/, jos lainoihin ei ole
+varauksia. Lainakielto seuraa, jos maksamattomia maksuja on yhteensä
+15 euroa tai enemmän. Eräpäivän jälkeen palautetusta niteestä peritään
+palveluhinnaston mukainen maksu. Palauttamattomien lainojen perintä
+siirtyy perintätoimistolle noin kuukauden kuluttua eräpäivästä.
+
+Lånetiden för följande material har gått ut. Var god och returnera
+eller förnya dina lån. Om materialet inte är reserverat kan du förnya
+dina lån på nätet, adress https://kansalliskirjasto.finna.fi/. Ditt kort
+spärras om du har 15 euro eller mera i obetalda avgifter. För material
+som returneras efter förfallodagen uppbärs förseningsavgift enligt
+gällande prislista. Om du redan har förnyat eller återlämnat dina lån,
+kan du bortse från detta meddelande.
+
+The loan period for the items listed below has expired. Please return
+the items or renew them at https://kansalliskirjasto.finna.fi/.
+Requested items cannot be renewed. The borrowing rights will be
+suspended if you have unpaid fines totaling 15 euros or more. The
+library will collect late fees according to the price list. If you
+have already taken care of this matter, please ignore this message.
+
+<item><<biblio.author>>: <<biblio.title>>, <<items.itemcallnumber>>
+Viivakoodi/streckkod/barcode: <<items.barcode>>
+Lainauspäivä/låndag/checkout date: <<issues.issuedate>>
+Eräpäivä/förfallodag/due date: <<issues.date_due>>
+</item>
+
+Voit ottaa yhteyttä neuvontaamme puhelimitse numeroon 02941 23196.
+Du kan kontakta vår kundtjänst per telefon på numret 02941 23196.
+You can contact our information service by phone at +358 2941 23196.
