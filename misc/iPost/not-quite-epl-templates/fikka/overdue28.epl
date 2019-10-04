@@ -47,8 +47,10 @@ collection fees to the collection agency. If you have already returned
 or renewed the loans, you may disregard this notice. If you have any
 questions, please contact telephone 02941 44633 or kk-perinta@helsinki.fi.
 
+----
 <item><<biblio.author>>: <<biblio.title>>, <<items.itemcallnumber>>
 Viivakoodi/streckkod/barcode: <<items.barcode>>
 Lainauspäivä/låndag/checkout date: <<issues.issuedate>>
 Eräpäivä/förfallodag/due date: <<issues.date_due>>
 </item>
+----

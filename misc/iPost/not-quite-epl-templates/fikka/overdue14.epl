@@ -36,12 +36,13 @@ suspended if you have unpaid fines totaling 15 euros or more. The
 library will collect late fees according to the price list. If you
 have already taken care of this matter, please ignore this message.
 
+----
 <item><<biblio.author>>: <<biblio.title>>, <<items.itemcallnumber>>
 Viivakoodi/streckkod/barcode: <<items.barcode>>
 Lainauspäivä/låndag/checkout date: <<issues.issuedate>>
 Eräpäivä/förfallodag/due date: <<issues.date_due>>
 </item>
-
+----
 Voit ottaa yhteyttä neuvontaamme puhelimitse numeroon 02941 23196.
 Du kan kontakta vår kundtjänst per telefon på numret 02941 23196.
 You can contact our information service by phone at +358 2941 23196.
