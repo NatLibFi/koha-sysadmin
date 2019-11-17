@@ -67,7 +67,7 @@ kuvailutietojen siirtäminen järjestelmien välillä.
 Varastotietoja ei kuitenkaan perinteisesti
 ole ollut tarvetta siirtää järjestelmien välillä
 muuten kuin järjestelmävaihdoksen yhteydessä,
-eivätkä ne ole joustavin tietorakenne
+eivätkä varastotietueet ole joustavin tietorakenne
 esimerkiksi kelluville kokoelmille.
 Sen verran ilmaisuvoimaisia ne kuitenkin ovat,
 että niitä on järjestelmävaihdoksen yhteydessä ollut
@@ -82,7 +82,7 @@ samaan tapaan kuin vapaa ohjelmakoodi.
 
 Kuten MARC-formaatti yleisemminkin myös varastotietueet
 ovat käytännössä osoittaneet olevansa sekä toimivia
-että myös enemmän tai vähemmän vaikesti hävitettäviä,
+että myös enemmän tai vähemmän vaikesti hävitettäviä.
 Kohaan on Kansalliskirjastossa lisätty
 mahdollisuus varastotietueiden käyttöön,
 mutta pakkoa ei ole.
