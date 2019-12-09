@@ -1,5 +1,5 @@
 (Luonnos Tietolinjassa 2019(2) julkaistuun
-`artikkeliin <http://urn.fi/URN:NBN:fi-fe2019120445617>`_.)
+[artikkeliin] (http://urn.fi/URN:NBN:fi-fe2019120445617))
 
 Koha ja varastotietueen tarkoitus
 =================================
