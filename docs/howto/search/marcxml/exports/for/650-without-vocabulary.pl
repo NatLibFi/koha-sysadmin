@@ -44,7 +44,7 @@ for my $file (@ARGV) {
 
         my $uri = $reader->namespaceURI || '';
         warn "WARNING: record has foreign XML namespace $uri\n"
-            unless grep /$uri/, values %namespace;
+            unless grep $_ eq $uri, values %namespace;
 
         do_record $xpc;
 
