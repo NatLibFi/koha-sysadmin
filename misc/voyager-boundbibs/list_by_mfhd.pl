@@ -10,9 +10,16 @@ my %XML_NS = ( marc => 'http://www.loc.gov/MARC21/slim' );
 
 # Refs-to-be to simple key–value hashes of ID’s
 my ($BIB_MFHDS, $MFHD_BIBS, $BIB_KOHANUMs);
-my ($BIB_TITLE, $MFHD_CALLNO);
+my ($BIB_TITLE, $MFHD_CALLNO, $KNUM_KHOSTS, $KHOST_KNUMS);
 
 binmode STDOUT, ":utf8";
+
+sub bounds_differ {
+    my ($check_bib, @have_visited) = @_;
+    for my $mfhd ($BIB_MFHDS->{$check_bib}) {
+        # FIXME
+    }
+}
 
 sub say_all {
     say join "\t", qw(Sijainti Nimeke biblionumber BIB_ID MFHD_ID);
@@ -55,6 +62,22 @@ sub do_holdings_node {
         *[@code="b" or @code="h" or @code="i"]/text() ');
 }
 
+sub do_koha_record {
+    my $xpc = shift;
+    my $bibno = $xpc->findvalue('
+        marc:datafield[@tag="999"]/*[@code="c"] ');
+
+    for my $field ( $xpc->findnodes('marc:datafield[@tag="773"]') ) {
+        next unless 'Yhteissidos' eq
+                $xpc->findvalue('marc:subfield[@code="i"]', $field);
+
+        my $host = $xpc->findvalue('marc:subfield[@code="w"]', $field);
+
+        push @{ $KHOST_KNUMS->{$host} }, $bibno;
+        push @{ $KNUM_KHOSTS->{$bibno} }, $host;
+    }
+}
+
 sub read_xml {
     my ($file, $do_record_sub) = @_;
     return unless $file; # (Yes, "0" too is false and ignored.)
@@ -83,14 +106,20 @@ sub read_xml {
 }
 
 sub run {
-    getopts 'b:k:r:w:', \my %opts
-        or die "USAGE: $0 -bBIB_MFHD -kKOHABNO_001 -rBIBS.xml -wMFHDS.xml\n";
+    getopts 'b:k:r:w:x:', \my %opts
+        or die "USAGE: $0 -bBIB_MFHD -kKOHABNO_001 " # Always required
+                . "-rBIBS.xml -wMFHDS.xml " # For titles and callnumbers
+                . "-xKOHABIBLIOS.xml\n"; # To list only differing bounds
+
     read_associations_into_hashes @$_ for (
-        [ $opts{'b'}, $BIB_MFHDS = {}, $MFHD_BIBS = {}    ],
-        [ $opts{'k'}, undef,           $BIB_KOHANUMs = {} ],
+        [ $opts{'b'} || '-b', $BIB_MFHDS = {}, $MFHD_BIBS = {}    ],
+        [ $opts{'k'} || '-k', undef,           $BIB_KOHANUMs = {} ],
     );
+
     read_xml $opts{'r'}, \&do_bib_node;
     read_xml $opts{'w'}, \&do_holdings_node;
+    read_xml $opts{'x'}, \&do_koha_record;
+
     say_all;
 }
 
