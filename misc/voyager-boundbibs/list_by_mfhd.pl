@@ -14,16 +14,51 @@ my ($BIB_TITLE, $MFHD_CALLNO, $KNUM_KHOSTS, $KHOST_KNUMS);
 
 binmode STDOUT, ":utf8";
 
+sub is_complicated {
+    my $mfhd_id = shift;
+    my ($bounds_found, $others_found) = (0, 0);
+    for my $bib_id (@{ $MFHD_BIBS->{$mfhd_id} }) {
+        unless ($bounds_found) {
+            for my $m2_id (@{ $BIB_MFHDS->{$bib_id} }) {
+                @{ $MFHD_BIBS->{$m2_id} } > 1
+                    and $bounds_found = 1;
+            }
+        }
+        @{ $BIB_MFHDS->{$bib_id} } > 1
+            and $others_found = 1;
+    }
+    return $bounds_found && $others_found;
+}
+
 sub bounds_differ {
-    my ($check_bib, @have_visited) = @_;
-    for my $mfhd ($BIB_MFHDS->{$check_bib}) {
+    my ($check_bib, @marked) = @_;
+
+    return 1 unless $BIB_KOHANUMs->{$check_bib} == 1; # One matching
+    my $kohanum = $BIB_KOHANUMs->{$check_bib}[0];     # Koha record
+
+    my $mfhds = $BIB_MFHDS->{$check_bib} || [];
+    my $khosts = $KNUM_KHOSTS->{$kohanum} || [];
+    return 1 unless @$mfhds == @$khosts;   # Matching bindings count
+
+    for my $mfhd (@$mfhds) {
+        my $bib_ids = $MFHD_BIBS->{$mfhd} || [];
+        for my $bib_id (@$bib_ids) {
+            # return 1 unless grep 
+        }
         # FIXME
     }
+}
+
+sub match_holdings {
+    my ($mfhd, @marked) = @_;
+    my $bib_ids = $MFHD_BIBS->{$mfhd} || [];
+    my $host_candidates;
 }
 
 sub say_all {
     say join "\t", qw(Sijainti Nimeke biblionumber BIB_ID MFHD_ID);
     while (my ($mfhd_id, $bib_ids) = each %$MFHD_BIBS) {
+        next unless is_complicated $mfhd_id;
         for my $bib_id (@$bib_ids) {
             say join "\t",
                     $MFHD_CALLNO->{$mfhd_id} || "",
@@ -111,7 +146,7 @@ sub run {
                 . "-rBIBS.xml -wMFHDS.xml " # For titles and callnumbers
                 . "-xKOHABIBLIOS.xml\n"; # To list only differing bounds
 
-    read_associations_into_hashes @$_ for (
+    read_associations_into_hashes(@$_) for (
         [ $opts{'b'} || '-b', $BIB_MFHDS = {}, $MFHD_BIBS = {}    ],
         [ $opts{'k'} || '-k', undef,           $BIB_KOHANUMs = {} ],
     );
