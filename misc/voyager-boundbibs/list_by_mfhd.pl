@@ -31,34 +31,44 @@ sub is_complicated {
 }
 
 sub bounds_differ {
-    my ($check_bib, @marked) = @_;
+    my @mfhds_to_check = shift;
+    my (%matched_mfhds, %matched_khosts);
 
-    return 1 unless $BIB_KOHANUMs->{$check_bib} == 1; # One matching
-    my $kohanum = $BIB_KOHANUMs->{$check_bib}[0];     # Koha record
+    MFHD: while (@mfhds_to_check) {
+        my $mfhd_id = shift @mfhds_to_check;
+        next if $matched_mfhds{$mfhd_id};
+        my @mfhd_bibs = @{ $MFHD_BIBS->{$mfhd_id} || [] }; 
+        next unless @mfhd_bibs > 1; # TODO: match single-bib to Koha Holding?
 
-    my $mfhds = $BIB_MFHDS->{$check_bib} || [];
-    my $khosts = $KNUM_KHOSTS->{$kohanum} || [];
-    return 1 unless @$mfhds == @$khosts;   # Matching bindings count
-
-    for my $mfhd (@$mfhds) {
-        my $bib_ids = $MFHD_BIBS->{$mfhd} || [];
-        for my $bib_id (@$bib_ids) {
-            # return 1 unless grep 
+        my %possible_khosts;
+        for my $bib_id (@mfhd_bibs) {
+            my @bib_kohanum = @{ $BIB_KOHANUMs->{$bib_id} || [] };
+            return 1 unless @bib_kohanum == 1; # not checked again in KANDI
+            for (@{ $KNUM_KHOSTS->{$bib_kohanum[0]} || [] }) {
+                $matched_khosts{$_} or $possible_khosts{$_} = 1;
+            }
+            push @mfhds_to_check, @{ $BIB_MFHDS->{$bib_id} || [] };
         }
-        # FIXME
+        
+        KANDI: for my $kandidate (keys %possible_khosts) {
+            my @khost_knums = @{ $KHOST_KNUMS->{$kandidate} || [] };
+            next unless @khost_knums == @mfhd_bibs;
+            for my $kno (map $BIB_KOHANUMs->{$_}[0], @mfhd_bibs) {
+                next KANDI unless grep $_ == $kno, @khost_knums;
+            }
+            $matched_mfhds{$mfhd_id} = $matched_khosts{$kandidate} = 1;
+            next MFHD;
+        }
+        return 1;
     }
-}
-
-sub match_holdings {
-    my ($mfhd, @marked) = @_;
-    my $bib_ids = $MFHD_BIBS->{$mfhd} || [];
-    my $host_candidates;
+    return 0;
 }
 
 sub say_all {
     say join "\t", qw(Sijainti Nimeke biblionumber BIB_ID MFHD_ID);
     while (my ($mfhd_id, $bib_ids) = each %$MFHD_BIBS) {
-        next unless is_complicated $mfhd_id;
+        #next unless is_complicated $mfhd_id;
+        next unless bounds_differ $mfhd_id;
         for my $bib_id (@$bib_ids) {
             say join "\t",
                     $MFHD_CALLNO->{$mfhd_id} || "",
