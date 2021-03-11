@@ -45,7 +45,7 @@ while (my $itsv = <>) {
                 itemcallnumber => $o,
                 #barcode => $p,
                 itype => $y,
-                itemnotes_nonpublic => $z,
+                itemnotes => $z,
             } )->store($dontindex);
         say my $inum = $item->itemnumber();  # Finish successful logline
         $item->set({ barcode => "INUM$inum" })->store($dontindex);
