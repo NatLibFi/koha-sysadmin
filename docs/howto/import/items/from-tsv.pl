@@ -47,14 +47,13 @@ while (my $itsv = <>) {
                 itemnotes_nonpublic => $z,
             } )->store(my $dontindex = { skip_record_index => 1 });
         say my $inum = $item->itemnumber();  # Finish successful logline
-        $item->add({ barcode => "INUM$inum" })->store($dontindex);
+        $item->set({ barcode => "INUM$inum" })->store($dontindex);
     }
     ++$to_reindex{$biblionumber};
 }
 
 if ($do_update_biblios_index) {
-    my @bnos = keys %to_reindex;
-    my $count = @bnos;
+    my $count = my @bnos = keys %to_reindex;
     say timestamp, " updating search index for $count biblionumbers";
     Koha::SearchEngine::Indexer->new(
         { index => $Koha::SearchEngine::BIBLIOS_INDEX }
