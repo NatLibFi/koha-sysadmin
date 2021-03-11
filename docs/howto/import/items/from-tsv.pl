@@ -7,9 +7,9 @@ sub timestamp { use POSIX; strftime('%Y%m%dT%H%M%SZ', gmtime) }
 #use Koha::Item;
 #use Koha::SearchEngine::Indexer;
 
-# For efficiency, we will be doing separately (comment out to skip):
-my $do_import_items++;          # (one by one, when looping over <>)
-my $do_update_biblios_index++;  # (for biblionumbers encountered)
+# For efficiency, we will be doing separately (set to 0 to skip):
+my $do_import_items = 1;          # (one by one, when looping over <>)
+my $do_update_biblios_index = 1;  # (for biblionumbers encountered)
 
 my %to_reindex;
 
@@ -30,6 +30,7 @@ while (my $itsv = <>) {
         unless defined $biblionumber && $biblionumber =~ /^\d+$/;
 
     if ($do_import_items) {
+        my $dontindex = { skip_record_index => 1 };
         # Log what we are processing to standard output
         print timestamp, " adding\t$itsv\t";
         # If this fails, you kept log, didn’t you?
@@ -45,7 +46,7 @@ while (my $itsv = <>) {
                 #barcode => $p,
                 itype => $y,
                 itemnotes_nonpublic => $z,
-            } )->store(my $dontindex = { skip_record_index => 1 });
+            } )->store($dontindex);
         say my $inum = $item->itemnumber();  # Finish successful logline
         $item->set({ barcode => "INUM$inum" })->store($dontindex);
     }
@@ -53,7 +54,7 @@ while (my $itsv = <>) {
 }
 
 if ($do_update_biblios_index) {
-    my $count = my @bnos = keys %to_reindex;
+    my $count = my @bnos = sort keys %to_reindex;
     say timestamp, " updating search index for $count biblionumbers";
     Koha::SearchEngine::Indexer->new(
         { index => $Koha::SearchEngine::BIBLIOS_INDEX }
