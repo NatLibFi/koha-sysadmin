@@ -35,7 +35,7 @@ while (my $itsv = <>) {
         print timestamp, " adding\t$itsv\t";
         # If this fails, you kept log, didn’t you?
         my $item = Koha::Item->new( {
-                biblionumber => $biblionumber,
+                biblionumber => $biblionumber,  # Die if nonexisting.
                 holding_id => $k,  # Does your Koha have MFHD records?
                 ccode => $_8,
                 homebranch => $a,
@@ -48,7 +48,7 @@ while (my $itsv = <>) {
                 itemnotes => $z,
             } )->store($dontindex);
         say my $inum = $item->itemnumber();  # Finish successful logline
-        $item->set({ barcode => "INUM$inum" })->store($dontindex);
+        $item->set({ barcode => "TekoMFinum$inum" })->store($dontindex);
     }
     ++$to_reindex{$biblionumber};
 }
