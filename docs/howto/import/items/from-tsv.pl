@@ -18,6 +18,9 @@ my %to_reindex;
 my (    $_8,    $a,     $b,     $c,     $o,     $y ) =
     qw( FEN     MFVAR   MFVAR   VARMF   MF      LS );
 
+# Prefix itemnumbers with this to get unique barcodes:
+my $bc_prefix = 'TekoMFinum';
+
 # USAGE: ./from-tsv.pl [ITEMSFILE]...
 # (OR use standard input instead of named files)
 while (my $itsv = <>) {
@@ -48,7 +51,7 @@ while (my $itsv = <>) {
                 itemnotes => $z,
             } )->store($dontindex);
         say my $inum = $item->itemnumber();  # Finish successful logline
-        $item->set({ barcode => "TekoMFinum$inum" })->store($dontindex);
+        $item->set({ barcode => "$bc_prefix$inum" })->store($dontindex);
     }
     ++$to_reindex{$biblionumber};
 }
