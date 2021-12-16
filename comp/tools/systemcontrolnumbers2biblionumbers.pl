@@ -57,6 +57,8 @@ sub print_biblionumber {
     my $query = "system-control-number=\"$system_control_number\"";
     my $searcher = Koha::SearchEngine::Search->new({
             index => $Koha::SearchEngine::BIBLIOS_INDEX});
+
+    # Expect $results to be ref to array of MARC::Records. Fetches only 2:
     my ($err, $results, $total_hits) =
         $searcher->simple_search_compat($query,0,2);
 
@@ -67,6 +69,11 @@ sub print_biblionumber {
     } elsif ($total_hits > 1) {
 	print STDERR "Multiple hits ($total_hits) ",
                 "for $system_control_number, skipping\n";
+
+	# To print multiple hits, maybe use something like:
+	#for my $result (@$results) {
+	#    print $searcher->extract_biblionumber( $result ) . "\n";
+	#}
     } else {
 	print $searcher->extract_biblionumber( @$results[0] ) . "\n";
     }
