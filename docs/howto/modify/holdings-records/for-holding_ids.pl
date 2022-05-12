@@ -4,8 +4,8 @@ use Modern::Perl;
 sub timestamp { use POSIX; strftime('%Y%m%dT%H%M%SZ', gmtime) }
 
 # Get inside your FOSS ILS Koha Perl environment and uncomment!
-use Koha::Holdings;
-use Koha::SearchEngine::Indexer;
+#use Koha::Holdings;
+#use Koha::SearchEngine::Indexer;
 
 # For efficiency, we will be doing separately (set to 0 to skip):
 my $do_modify_holdings_records = 1;  # (id by id, when looping over <>)
@@ -49,6 +49,9 @@ while (my $holding_id = <>) {
 if ($do_update_biblios_index) {
     my $count = my @bnos = sort keys %to_reindex;
     say timestamp, " updating search index for $count biblionumbers";
+    # This may fail if $count is too big (<10k is probably ok).
+    # If that happens, we may want to do re-runs in smaller
+    # batches with $do_modify_holdings_records set to 0.
     Koha::SearchEngine::Indexer->new(
         { index => $Koha::SearchEngine::BIBLIOS_INDEX }
     )->index_records(\@bnos, 'specialUpdate', 'biblioserver');
